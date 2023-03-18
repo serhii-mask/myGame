@@ -45,8 +45,8 @@ def create_bonus():
     return [bonus, bonus_rect, bonus_speed]
 
 
-CREATE_BONUS = pygame.USEREVENT + 1
-pygame.time.set_timer(CREATE_BONUS, 1500)
+CREATE_BONUS = pygame.USEREVENT + 2
+pygame.time.set_timer(CREATE_BONUS, 2000)
 
 bonuses = []
 
@@ -84,7 +84,7 @@ while is_working:
         bonus[1] = bonus[1].move(0, bonus[2])
         main_surface.blit(bonus[0], bonus[1])
 
-        if bonus[1].bottom > heigth:
+        if bonus[1].bottom > heigth + 20:
             bonuses.pop(bonuses.index(bonus))
 
         if ball_rect.colliderect(bonus[1]):

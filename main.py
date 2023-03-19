@@ -31,7 +31,7 @@ def create_enemy():
     enemy = pygame.transform.scale(
         pygame.image.load('enemy.png').convert_alpha(), (68, 24))
     enemy_rect = pygame.Rect(
-        width, random.randint(0, heigth), *enemy.get_size())
+        width + 68, random.randint(0, heigth - 24), *enemy.get_size())
     enemy_speed = random.randint(2, 5)
     return [enemy, enemy_rect, enemy_speed]
 
@@ -42,7 +42,7 @@ def create_bonus():
     bonus = pygame.transform.scale(
         pygame.image.load('bonus.png').convert_alpha(), (90, 149))
     bonus_rect = pygame.Rect(
-        random.randint(0, width), 0, *bonus.get_size())
+        random.randint(0, width - 90), -149, *bonus.get_size())
     bonus_speed = random.randint(4, 6)
     return [bonus, bonus_rect, bonus_speed]
 

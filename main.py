@@ -49,7 +49,9 @@ def create_bonus():
 
 bg = pygame.transform.scale(pygame.image.load(
     'background.png').convert(), screen)
-
+bgX = 0
+bgX2 = bg.get_width()
+bg_speed = 3
 
 CREATE_ENEMY = pygame.USEREVENT + 1
 pygame.time.set_timer(CREATE_ENEMY, 1500)
@@ -79,8 +81,19 @@ while is_working:
 
     pressed_keys = pygame.key.get_pressed()
 
-    main_surface.fill(WHITE)
-    main_surface.blit(bg, (0, 0))
+    # main_surface.fill(WHITE)
+    # main_surface.blit(bg, (0, 0))
+    bgX -= bg_speed
+    bgX2 -= bg_speed
+
+    if bgX < -bg.get_width():
+        bgX = bg.get_width()
+
+    if bgX2 < -bg.get_width():
+        bgX2 = bg.get_width()
+
+    main_surface.blit(bg, (bgX, 0))
+    main_surface.blit(bg, (bgX2, 0))
 
     main_surface.blit(player, player_rect)
 

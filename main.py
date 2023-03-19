@@ -1,5 +1,7 @@
-import pygame
 import random
+from os import listdir
+
+import pygame
 from pygame. constants import QUIT, K_DOWN, K_UP, K_LEFT, K_RIGHT
 
 pygame.init()
@@ -17,17 +19,16 @@ font = pygame.font.SysFont('Verdana', 20)
 
 main_surface = pygame.display.set_mode(screen)
 
-# player = pygame.Surface((20, 20))
-# player.fill(WHITE)
-player = pygame.transform.scale(pygame.image.load(
-    'player.png').convert_alpha(), (91, 38))
+IMGS_PATH = 'goose'
+
+player_imgs = [pygame.transform.scale(pygame.image.load(
+    IMGS_PATH + '/' + file).convert_alpha(), (91, 38)) for file in listdir(IMGS_PATH)]
+player = pygame.transform.scale(player_imgs[0], (91, 38))
 player_rect = player.get_rect()
 player_speed = 10
 
 
 def create_enemy():
-    # enemy = pygame.Surface((20, 20))
-    # enemy.fill(RED)
     enemy = pygame.transform.scale(
         pygame.image.load('enemy.png').convert_alpha(), (68, 24))
     enemy_rect = pygame.Rect(
@@ -37,8 +38,6 @@ def create_enemy():
 
 
 def create_bonus():
-    # bonus = pygame.Surface((20, 20))
-    # bonus.fill(GREEN)
     bonus = pygame.transform.scale(
         pygame.image.load('bonus.png').convert_alpha(), (90, 149))
     bonus_rect = pygame.Rect(
@@ -54,12 +53,18 @@ bgX2 = bg.get_width()
 bg_speed = 3
 
 CREATE_ENEMY = pygame.USEREVENT + 1
-pygame.time.set_timer(CREATE_ENEMY, 1500)
+pygame.time.set_timer(CREATE_ENEMY, 2500)
 
 CREATE_BONUS = pygame.USEREVENT + 2
-pygame.time.set_timer(CREATE_BONUS, 2500)
+pygame.time.set_timer(CREATE_BONUS, 3500)
+
+CHANGE_IMG = pygame.USEREVENT + 3
+pygame.time.set_timer(CHANGE_IMG, 125)
+
+img_index = 0
 
 scores = 0
+# text_score = ('Score: ' + scores)
 
 enemies = []
 bonuses = []
@@ -79,10 +84,14 @@ while is_working:
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
 
+        if event.type == CHANGE_IMG:
+            img_index += 1
+            if img_index == len(player_imgs):
+                img_index = 0
+            player = player_imgs[img_index]
+
     pressed_keys = pygame.key.get_pressed()
 
-    # main_surface.fill(WHITE)
-    # main_surface.blit(bg, (0, 0))
     bgX -= bg_speed
     bgX2 -= bg_speed
 
@@ -97,7 +106,8 @@ while is_working:
 
     main_surface.blit(player, player_rect)
 
-    main_surface.blit(font.render(str(scores), True, WHITE), (width - 30, 0))
+    main_surface.blit(font.render(
+        str(scores), True, BLACK), (width - 30, 0))
 
     for enemy in enemies:
         enemy[1] = enemy[1].move(-enemy[2], 0)
@@ -120,7 +130,7 @@ while is_working:
             bonuses.pop(bonuses.index(bonus))
             scores += 1
 
-    if pressed_keys[K_DOWN] and not player_rect.bottom >= heigth:
+    if pressed_keys[K_DOWN] and not player_rect.bottom >= heigth - 2:
         player_rect = player_rect.move(0, player_speed)
 
     if pressed_keys[K_UP] and not player_rect.top <= 0:

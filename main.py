@@ -11,9 +11,6 @@ FPS = pygame.time.Clock()
 screen = width, heigth = 800, 600
 
 BLACK = 0, 0, 0
-WHITE = 255, 255, 255
-RED = 255, 0, 0
-GREEN = 0, 255, 0
 
 font = pygame.font.SysFont('Verdana', 20)
 
@@ -64,7 +61,6 @@ pygame.time.set_timer(CHANGE_IMG, 125)
 img_index = 0
 
 scores = 0
-# text_score = ('Score: ' + scores)
 
 enemies = []
 bonuses = []

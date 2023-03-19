@@ -13,12 +13,14 @@ WHITE = 255, 255, 255
 RED = 255, 0, 0
 GREEN = 0, 255, 0
 
+font = pygame.font.SysFont('Verdana', 20)
+
 main_surface = pygame.display.set_mode(screen)
 
 ball = pygame.Surface((20, 20))
 ball.fill(WHITE)
 ball_rect = ball.get_rect()
-ball_speed = 7
+ball_speed = 5
 
 
 def create_enemy():
@@ -45,6 +47,8 @@ pygame.time.set_timer(CREATE_ENEMY, 1500)
 CREATE_BONUS = pygame.USEREVENT + 2
 pygame.time.set_timer(CREATE_BONUS, 2500)
 
+scores = 0
+
 enemies = []
 bonuses = []
 
@@ -68,6 +72,9 @@ while is_working:
     main_surface.fill(BLACK)
 
     main_surface.blit(ball, ball_rect)
+
+    main_surface.blit(font.render(str(scores), True, WHITE), (width - 30, 0))
+
     for enemy in enemies:
         enemy[1] = enemy[1].move(-enemy[2], 0)
         main_surface.blit(enemy[0], enemy[1])
@@ -76,7 +83,7 @@ while is_working:
             enemies.pop(enemies.index(enemy))
 
         if ball_rect.colliderect(enemy[1]):
-            enemies.pop(enemies.index(enemy))
+            is_working = False
 
     for bonus in bonuses:
         bonus[1] = bonus[1].move(0, bonus[2])
@@ -84,6 +91,10 @@ while is_working:
 
         if bonus[1].bottom >= heigth:
             bonuses.pop(bonuses.index(bonus))
+
+        if ball_rect.colliderect(bonus[1]):
+            bonuses.pop(bonuses.index(bonus))
+            scores += 1
 
     if pressed_keys[K_DOWN] and not ball_rect.bottom >= heigth:
         ball_rect = ball_rect.move(0, ball_speed)
@@ -96,7 +107,5 @@ while is_working:
 
     if pressed_keys[K_RIGHT] and not ball_rect.right >= width:
         ball_rect = ball_rect.move(ball_speed, 0)
-
-    print(len(bonuses))
 
     pygame.display.flip()

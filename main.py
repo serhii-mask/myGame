@@ -18,7 +18,7 @@ main_surface = pygame.display.set_mode(screen)
 ball = pygame.Surface((20, 20))
 ball.fill(WHITE)
 ball_rect = ball.get_rect()
-ball_speed = 5
+ball_speed = 7
 
 
 def create_enemy():
@@ -30,24 +30,22 @@ def create_enemy():
     return [enemy, enemy_rect, enemy_speed]
 
 
-CREATE_ENEMY = pygame.USEREVENT + 1
-pygame.time.set_timer(CREATE_ENEMY, 1500)
-
-enemies = []
-
-
 def create_bonus():
     bonus = pygame.Surface((20, 20))
     bonus.fill(GREEN)
     bonus_rect = pygame.Rect(
         random.randint(0, width), 0, *bonus.get_size())
-    bonus_speed = random.randint(2, 5)
+    bonus_speed = random.randint(4, 6)
     return [bonus, bonus_rect, bonus_speed]
 
 
-CREATE_BONUS = pygame.USEREVENT + 2
-pygame.time.set_timer(CREATE_BONUS, 2000)
+CREATE_ENEMY = pygame.USEREVENT + 1
+pygame.time.set_timer(CREATE_ENEMY, 1500)
 
+CREATE_BONUS = pygame.USEREVENT + 2
+pygame.time.set_timer(CREATE_BONUS, 2500)
+
+enemies = []
 bonuses = []
 
 is_working = True
@@ -84,10 +82,7 @@ while is_working:
         bonus[1] = bonus[1].move(0, bonus[2])
         main_surface.blit(bonus[0], bonus[1])
 
-        if bonus[1].bottom > heigth + 20:
-            bonuses.pop(bonuses.index(bonus))
-
-        if ball_rect.colliderect(bonus[1]):
+        if bonus[1].bottom >= heigth:
             bonuses.pop(bonuses.index(bonus))
 
     if pressed_keys[K_DOWN] and not ball_rect.bottom >= heigth:
